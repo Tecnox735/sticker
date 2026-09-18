@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sticker.Ly — Stickers personalizados hechos a tu manera</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<style>
+  :root{
+    --cream:#FBF3E7;
+    --cream-2:#FFFFFF;
+    --paper:#FFFCF7;
+    --ink:#221F3B;
+    --ink-dim:#5C5877;
+    --ink-faint:#8B87A0;
+    --pink:#FF5C97;
+    --pink-600:#F23E80;
+    --pink-soft:#FFE0EC;
+    --purple:#8B7CDB;
+    --purple-600:#7660D1;
+    --purple-soft:#ECE6FB;
+    --yellow:#FFC93C;
+    --yellow-600:#F0AF1A;
+    --yellow-soft:#FFF3D2;
+    --navy:#221F3B;
+    --navy-2:#332E57;
+    --green:#3FBF7F;
+    --line: rgba(34,31,59,0.10);
+    --line-2: rgba(34,31,59,0.16);
+    --shadow: 0 16px 34px rgba(34,20,50,0.10);
+    --shadow-lg: 0 24px 48px rgba(34,20,50,0.16);
+    color-scheme: light;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth; scroll-padding-top:82px;}
+  body{
+    margin:0;
+    background: var(--cream);
+    background-image: radial-gradient(circle, rgba(34,31,59,0.08) 1px, transparent 1.4px);
+    background-size: 22px 22px;
+    color: var(--ink);
+    font-family:"Nunito", system-ui, sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  img{max-width:100%; display:block;}
+  a{color:inherit; text-decoration:none;}
+  h1,h2,h3{font-family:"Baloo 2","Nunito",sans-serif; margin:0; font-weight:700; line-height:1.15;}
+  p{margin:0;}
+  button{font-family:inherit; cursor:pointer; border:none; background:none;}
+  input,select,textarea{font-family:inherit; font-size:1rem;}
+  ::selection{background:var(--pink); color:#fff;}
+  :focus-visible{ outline:3px solid var(--purple); outline-offset:2px; border-radius:6px; }
+
+  .container{ width:100%; max-width:1140px; margin:0 auto; padding:0 1.5rem; }
+  .badge{
+    display:inline-flex; align-items:center; gap:.45rem;
+    background: var(--cream-2); border:1px solid var(--line-2);
+    border-radius:999px; padding:.45rem 1rem;
+    font-weight:800; font-size:.86rem; color: var(--ink);
+    box-shadow: 0 4px 10px rgba(34,20,50,0.05);
+  }
+
+  /* ---------- NAV ---------- */
+  .nav{ position:sticky; top:0; z-index:60; background: rgba(251,243,231,0.86); backdrop-filter: blur(12px); border-bottom:1px solid var(--line); }
+  .nav-inner{ max-width:1140px; margin:0 auto; display:flex; align-items:center; gap:1.25rem; padding:.7rem 1.5rem; }
+  .brand{ display:flex; align-items:center; gap:.55rem; margin-right:auto; font-family:"Baloo 2",sans-serif; font-weight:800; font-size:1.25rem; color:var(--ink); }
+  .brand-dot{ width:34px; height:34px; border-radius:50%; background: conic-gradient(from 200deg, var(--pink), var(--purple), var(--yellow), var(--pink)); display:grid; place-items:center; font-size:1rem; box-shadow: inset 0 0 0 3px var(--cream-2); }
+  .nav-links{ display:flex; align-items:center; gap:1.6rem; }
+  .nav-links a{ font-weight:700; font-size:.94rem; color:var(--ink-dim); transition:color .18s; }
+  .nav-links a:hover{ color:var(--pink-600); }
+  .nav-cta{ background:var(--ink); color:#fff; font-weight:800; font-size:.88rem; padding:.6rem 1.25rem; border-radius:999px; white-space:nowrap; transition: transform .16s ease; box-shadow: var(--shadow); }
+  .nav-cta:hover{ transform: translateY(-2px); }
+  .nav-toggle{ display:none; width:40px; height:40px; border-radius:50%; border:1px solid var(--line-2); align-items:center; justify-content:center; flex-direction:column; gap:4px; }
+  .nav-toggle span{ width:18px; height:2px; background:var(--ink); border-radius:2px; transition:.2s; }
+  .nav-toggle.open span:nth-child(1){ transform: translateY(6px) rotate(45deg); }
+  .nav-toggle.open span:nth-child(2){ opacity:0; }
+  .nav-toggle.open span:nth-child(3){ transform: translateY(-6px) rotate(-45deg); }
+  .mobile-panel{ max-height:0; overflow:hidden; transition:max-height .3s ease; background:var(--paper); border-bottom:1px solid var(--line); }
+  .mobile-panel.open{ max-height:320px; }
+  .mobile-panel-inner{ padding:1rem 1.5rem 1.5rem; display:flex; flex-direction:column; gap:.9rem; }
+  .mobile-panel a{ font-weight:700; color:var(--ink-dim); font-size:1rem; }
+  .mobile-panel .nav-cta{ align-self:flex-start; }
+  @media (max-width:800px){ .nav-links{display:none;} .nav-cta{display:none;} .nav-toggle{display:flex;} }
+
+  /* ---------- BUTTONS ---------- */
+  .btn{ display:inline-flex; align-items:center; gap:.5rem; padding:.85rem 1.6rem; border-radius:999px; font-weight:800; font-size:.98rem; transition: transform .16s ease, box-shadow .16s ease, filter .16s ease; }
+  .btn-pink{ background:var(--pink); color:#fff; box-shadow:0 10px 22px rgba(255,92,151,0.35); }
+  .btn-pink:hover{ transform:translateY(-2px); filter:brightness(1.05); }
+  .btn-yellow{ background:var(--yellow); color:var(--ink); box-shadow:0 10px 22px rgba(255,201,60,0.35); }
+  .btn-yellow:hover{ transform:translateY(-2px); filter:brightness(1.03); }
+  .btn-navy{ background:var(--navy); color:#fff; box-shadow:0 10px 22px rgba(34,31,59,0.3); }
+  .btn-navy:hover{ transform:translateY(-2px); }
+  .btn-purple{ background:var(--purple); color:#fff; box-shadow:0 10px 22px rgba(139,124,219,0.32); }
+  .btn-purple:hover{ transform:translateY(-2px); }
+  .btn-outline{ border:2px solid var(--line-2); color:var(--ink); }
+  .btn-outline:hover{ border-color:var(--ink); }
+  .btn-green{ background:var(--green); color:#fff; box-shadow:0 10px 22px rgba(63,191,127,0.32); }
+  .btn-green:hover{ transform:translateY(-2px); }
+  .btn:disabled{ opacity:.45; cursor:not-allowed; transform:none !important; box-shadow:none !important; }
+  .btn-sm{ padding:.55rem 1.1rem; font-size:.86rem; }
+  .btn-lg{ padding:1.05rem 2.1rem; font-size:1.06rem; }
+
+  /* ---------- SECTION SCAFFOLD ---------- */
+  section{ padding:5.5rem 1.5rem; position:relative; }
+  .section-white{ background:var(--paper); }
+  .section-head{ max-width:640px; margin:0 auto 2.8rem; text-align:center; display:flex; flex-direction:column; align-items:center; gap:.9rem; }
+  .section-head h2{ font-size:clamp(1.8rem,3.4vw,2.5rem); text-wrap:balance; }
+  .section-head p{ color:var(--ink-dim); font-size:1.02rem; }
+  .section-head.left{ text-align:left; align-items:flex-start; margin:0 0 2.4rem; }
+
+  /* ---------- HERO ---------- */
+  .hero{ padding-top:3.5rem; }
+  .hero-grid{ max-width:1140px; margin:0 auto; display:grid; grid-template-columns:1.05fr .95fr; gap:2.5rem; align-items:center; }
+  .hero h1{ font-size:clamp(2.3rem,5vw,3.6rem); line-height:1.08; margin:1rem 0 1.1rem; text-wrap:balance; }
+  .hero h1 .l1{ color:var(--ink); display:block; }
+  .hero h1 .l2{ color:var(--pink); display:block; }
+  .hero h1 .l3{ color:var(--purple); display:block; }
+  .hero p.lede{ color:var(--ink-dim); font-size:1.08rem; max-width:480px; margin-bottom:1.8rem; }
+  .hero p.lede strong{ color:var(--ink); }
+  .hero-actions{ display:flex; gap:.85rem; flex-wrap:wrap; }
+  .hero-tags{ display:flex; gap:1.4rem; margin-top:1.8rem; flex-wrap:wrap; }
+  .hero-tag{ display:flex; align-items:center; gap:.4rem; font-weight:800; font-size:.9rem; color:var(--ink-dim); }
+
+  .hero-art{ position:relative; height:420px; }
+  .sticker-card{ position:absolute; border-radius:32px; background:var(--cream-2); box-shadow:var(--shadow-lg); display:flex; flex-direction:column; align-items:center; justify-content:center; border:6px solid #fff; }
+  .sc-main{ width:270px; height:270px; left:50%; top:46%; transform:translate(-50%,-50%) rotate(-3deg); background: linear-gradient(155deg, var(--purple-soft), var(--pink-soft)); z-index:3; animation: settleMain 1.1s ease-out; }
+  .sc-main .word{ font-family:"Baloo 2",sans-serif; font-weight:800; font-size:2rem; }
+  .sc-main .word .a{ color:var(--purple-600); }
+  .sc-main .word .b{ color:var(--pink-600); }
+  .sc-main .sub{ font-weight:700; color:var(--ink-dim); font-size:.85rem; margin-top:.3rem; }
+  .sc-main .row{ display:flex; gap:.5rem; font-size:1.3rem; margin-bottom:.4rem; }
+  .sc-a{ width:120px; height:150px; left:2%; top:8%; background:var(--yellow-soft); transform:rotate(-14deg); z-index:2; font-size:2.6rem; animation: settleA 1s ease-out; }
+  .sc-b{ width:150px; height:110px; right:0; top:2%; background:var(--pink-soft); transform:rotate(11deg); z-index:2; font-size:2.4rem; animation: settleB 1.15s ease-out; }
+  .sc-c{ width:110px; height:110px; right:4%; bottom:6%; background:var(--navy); color:#fff; transform:rotate(8deg); z-index:2; font-size:2.1rem; animation: settleC 1.25s ease-out; }
+  .sc-d{ width:96px; height:96px; left:8%; bottom:2%; background:var(--purple-soft); transform:rotate(-9deg); z-index:1; font-size:2rem; animation: settleD 1.3s ease-out; }
+  @keyframes settleMain{ from{ opacity:0; transform:translate(-50%,-50%) rotate(-3deg) scale(.85); } to{ opacity:1; transform:translate(-50%,-50%) rotate(-3deg) scale(1); } }
+  @keyframes settleA{ from{ opacity:0; transform:rotate(-30deg) translateY(-20px); } to{ opacity:1; transform:rotate(-14deg) translateY(0); } }
+  @keyframes settleB{ from{ opacity:0; transform:rotate(28deg) translateY(-20px); } to{ opacity:1; transform:rotate(11deg) translateY(0); } }
+  @keyframes settleC{ from{ opacity:0; transform:rotate(24deg) translateY(20px); } to{ opacity:1; transform:rotate(8deg) translateY(0); } }
+  @keyframes settleD{ from{ opacity:0; transform:rotate(-24deg) translateY(20px); } to{ opacity:1; transform:rotate(-9deg) translateY(0); } }
+  @media (prefers-reduced-motion:reduce){ .sticker-card{ animation:none !important; } }
+
+  @media (max-width:920px){
+    .hero-grid{ grid-template-columns:1fr; }
+    .hero-art{ height:320px; margin-top:1rem; }
+    .sc-main{ width:210px; height:210px; }
+  }
+
+  /* ---------- PEDIDO (order builder) ---------- */
+  .pedido-grid{ max-width:1140px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:1.6rem; align-items:start; }
+  .panel{ background:var(--cream-2); border:1px solid var(--line); border-radius:26px; padding:1.9rem; box-shadow:var(--shadow); }
+  .panel h3{ font-size:1.15rem; display:flex; align-items:center; gap:.5rem; margin-bottom:.3rem; }
+  .panel .hint{ color:var(--ink-faint); font-size:.86rem; margin-bottom:1.1rem; }
+  .dropzone{ border:2px dashed var(--line-2); border-radius:20px; padding:1.6rem 1rem; text-align:center; transition: border-color .18s, background .18s; cursor:pointer; }
+  .dropzone.drag{ border-color:var(--pink); background:var(--pink-soft); }
+  .dropzone .dz-icon{ font-size:2.1rem; }
+  .dropzone .dz-title{ font-weight:800; margin:.4rem 0 .15rem; }
+  .dropzone .dz-sub{ color:var(--ink-faint); font-size:.86rem; }
+  .file-chip{ display:none; align-items:center; gap:.65rem; margin-top:1rem; background:var(--cream); border:1px solid var(--line); border-radius:14px; padding:.6rem .8rem; }
+  .file-chip.show{ display:flex; }
+  .file-chip img{ width:42px; height:42px; border-radius:8px; object-fit:cover; flex-shrink:0; }
+  .file-chip .name{ font-weight:700; font-size:.88rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1; }
+  .file-chip .x{ font-weight:800; color:var(--ink-faint); padding:.2rem; }
+
+  .accessory-note{ font-size:.78rem; color:var(--ink-faint); background:var(--yellow-soft); border-radius:10px; padding:.5rem .7rem; margin:1rem 0 .7rem; }
+  .chip-row{ display:flex; flex-wrap:wrap; gap:.55rem; margin-bottom:1.3rem; }
+  .chip{ border:1.5px solid var(--line-2); border-radius:999px; padding:.45rem .95rem; font-weight:700; font-size:.85rem; color:var(--ink-dim); transition: all .15s ease; }
+  .chip.active{ background:var(--purple); border-color:var(--purple); color:#fff; }
+
+  .order-list{ display:flex; flex-direction:column; gap:.8rem; margin-bottom:1.2rem; max-height:360px; overflow-y:auto; }
+  .order-empty{ color:var(--ink-faint); font-size:.92rem; text-align:center; padding:1.6rem 0; }
+  .order-item{ display:flex; align-items:center; gap:.8rem; background:var(--cream); border:1px solid var(--line); border-radius:14px; padding:.6rem .8rem; }
+  .order-item img{ width:48px; height:48px; border-radius:10px; object-fit:cover; flex-shrink:0; }
+  .order-item .meta{ flex:1; min-width:0; }
+  .order-item .meta .label{ font-weight:800; font-size:.86rem; margin-bottom:.15rem; }
+  .order-item .meta .tags{ display:flex; flex-wrap:wrap; gap:.3rem; }
+  .order-item .meta .tags span{ background:var(--purple-soft); color:var(--purple-600); font-size:.72rem; font-weight:800; padding:.15rem .5rem; border-radius:999px; }
+  .order-item .remove{ font-weight:800; color:var(--ink-faint); font-size:1.1rem; flex-shrink:0; }
+  .order-item .remove:hover{ color:var(--pink-600); }
+  .order-actions{ display:flex; gap:.7rem; flex-wrap:wrap; }
+
+  .postcard-wrap{ margin-top:1.4rem; display:none; }
+  .postcard-wrap.show{ display:block; }
+  #postcardTemplate{ width:420px; padding:1.7rem; background:linear-gradient(160deg,#fff,var(--pink-soft)); border-radius:26px; border:4px solid #fff; box-shadow:0 0 0 2px var(--line); font-family:"Nunito",sans-serif; }
+  #postcardTemplate .pc-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:.9rem; }
+  #postcardTemplate .pc-brand{ font-family:"Baloo 2",sans-serif; font-weight:800; font-size:1.15rem; color:var(--ink); }
+  #postcardTemplate .pc-code{ font-weight:800; font-size:.78rem; color:var(--purple-600); background:var(--purple-soft); padding:.25rem .6rem; border-radius:999px; }
+  #postcardTemplate .pc-item{ background:rgba(255,255,255,0.75); border-radius:14px; padding:.7rem; margin-bottom:.7rem; }
+  #postcardTemplate .pc-title{ font-weight:800; font-size:.9rem; color:var(--ink); }
+  #postcardTemplate .pc-item .t{ font-size:.74rem; font-weight:700; color:var(--ink-dim); margin:.1rem 0 .5rem; }
+  #postcardTemplate .pc-img{ background:#fff; border:1px solid var(--line-2); border-radius:10px; padding:6px; }
+  #postcardTemplate .pc-img img{ display:block; margin:0 auto; border-radius:6px; }
+  #postcardTemplate .pc-file{ margin-top:.4rem; font-size:.68rem; font-weight:700; color:var(--ink-faint); word-break:break-all; }
+  .order-item > a{ flex-shrink:0; }
+  .orig-box{ margin-top:1.1rem; padding:1rem 1.1rem; border-radius:16px; background:var(--purple-soft); }
+  .orig-title{ font-weight:800; font-size:.9rem; }
+  .orig-hint{ font-size:.8rem; color:var(--ink-dim); margin:.15rem 0 .7rem; }
+  .orig-list{ display:flex; flex-direction:column; gap:.4rem; margin-bottom:.7rem; }
+  .orig-list a{ font-weight:800; font-size:.84rem; color:var(--purple-600); word-break:break-all; }
+  .orig-list a:hover{ text-decoration:underline; }
+  .send-steps{ margin:1.2rem 0 0; padding-left:1.3rem; font-size:.88rem; color:var(--ink-dim); }
+  .send-steps li{ margin-bottom:.45rem; }
+  .send-steps strong{ color:var(--ink); }
+  .orig-row{ display:flex; align-items:center; gap:.6rem; }
+  .orig-row img{ width:56px; height:56px; border-radius:10px; object-fit:cover; flex-shrink:0; background:#fff; }
+  .share-status{ margin-top:.6rem; font-size:.8rem; font-weight:700; color:var(--pink-600); }
+  .share-status:empty{ display:none; }
+  #postcardTemplate .pc-foot{ margin-top:.6rem; text-align:center; font-size:.76rem; font-weight:700; color:var(--ink-faint); }
+  .postcard-preview{ text-align:center; }
+  .postcard-preview img{ max-width:100%; border-radius:20px; box-shadow:var(--shadow-lg); margin:0 auto 1rem; }
+  .postcard-actions{ display:flex; gap:.7rem; justify-content:center; flex-wrap:wrap; }
+  .postcard-note{ font-size:.82rem; color:var(--ink-faint); text-align:center; margin-top:.8rem; }
+
+  @media (max-width:920px){ .pedido-grid{ grid-template-columns:1fr; } }
+
+  /* ---------- DISEÑA TU STICKER ---------- */
+  .designer-grid{ max-width:1140px; margin:0 auto; display:grid; grid-template-columns:1fr .8fr; gap:2rem; align-items:start; }
+  .step-label{ font-weight:800; font-size:.86rem; color:var(--ink-faint); margin-bottom:.5rem; }
+  .step-block{ margin-bottom:1.3rem; }
+  .shape-row, .color-row{ display:flex; gap:.6rem; flex-wrap:wrap; }
+  .shape-opt{ border:2px solid var(--line-2); border-radius:14px; padding:.55rem 1rem; font-weight:700; font-size:.88rem; }
+  .shape-opt.active{ border-color:var(--navy); background:var(--navy); color:#fff; }
+  .color-dot{ width:34px; height:34px; border-radius:50%; border:3px solid transparent; }
+  .color-dot.active{ border-color:var(--ink); }
+  .designer-input{ width:100%; padding:.75rem 1rem; border:2px solid var(--line-2); border-radius:14px; }
+  .designer-select{ width:100%; padding:.75rem 1rem; border:2px solid var(--line-2); border-radius:14px; background:#fff; }
+  .preview-stage{ background:var(--purple-soft); border-radius:26px; padding:2.5rem 1.5rem; display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:340px; }
+  .sticker-preview{ width:190px; height:190px; display:flex; flex-direction:column; align-items:center; justify-content:center; border:6px solid #fff; box-shadow:var(--shadow-lg); transition: border-radius .2s, background .2s, clip-path .2s; }
+  .sticker-preview .emoji{ font-size:3rem; }
+  .sticker-preview .txt{ font-family:"Baloo 2",sans-serif; font-weight:800; margin-top:.3rem; text-align:center; padding:0 .5rem; word-break:break-word; }
+  .preview-caption{ margin-top:1.1rem; font-weight:700; color:var(--ink-dim); font-size:.9rem; }
+
+  @media (max-width:920px){ .designer-grid{ grid-template-columns:1fr; } }
+
+  /* ---------- JUEGO ---------- */
+  .game-panel{ background:var(--navy); border-radius:28px; padding:1.6rem; box-shadow:var(--shadow-lg); }
+  .game-top{ display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:.8rem; margin-bottom:1rem; }
+  .game-title{ color:#fff; font-weight:800; display:flex; align-items:center; gap:.5rem; font-size:1.05rem; }
+  .game-stats{ display:flex; gap:.6rem; }
+  .stat-chip{ background:rgba(255,255,255,0.12); color:#fff; font-weight:800; font-size:.82rem; padding:.4rem .8rem; border-radius:999px; }
+  .game-stage{ position:relative; background:linear-gradient(180deg,#2c2852,#221f3b); border-radius:18px; overflow:hidden; }
+  #gameCanvas{ width:100%; display:block; touch-action:manipulation; }
+  .game-overlay{ position:absolute; inset:0; background:rgba(20,18,38,0.85); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:1.5rem; gap:.7rem; }
+  .game-overlay.hidden{ display:none; }
+  .game-overlay h4{ color:#fff; font-size:1.3rem; }
+  .game-overlay p{ color:rgba(255,255,255,0.75); font-size:.92rem; max-width:320px; }
+  .initials-row{ display:flex; gap:.5rem; align-items:center; margin-top:.4rem; }
+  .initials-row input{ width:64px; text-align:center; font-family:"Baloo 2",sans-serif; font-weight:800; font-size:1.4rem; text-transform:uppercase; padding:.5rem; border-radius:12px; border:none; letter-spacing:.15em; }
+  .game-hint{ color:rgba(255,255,255,0.55); font-size:.78rem; text-align:center; margin-top:.7rem; }
+  .game-bottom{ display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; margin-top:1.6rem; }
+  .lb-panel{ background:var(--cream-2); border:1px solid var(--line); border-radius:20px; padding:1.3rem 1.4rem; }
+  .lb-panel h4{ font-size:1rem; display:flex; align-items:center; gap:.4rem; margin-bottom:.9rem; }
+  .lb-row{ display:flex; align-items:center; justify-content:space-between; padding:.4rem 0; border-bottom:1px solid var(--line); font-weight:700; font-size:.92rem; }
+  .lb-row:last-child{ border-bottom:none; }
+  .lb-row .rank{ color:var(--ink-faint); width:1.6rem; }
+  .lb-row.mine{ color:var(--pink-600); }
+  .lb-empty{ color:var(--ink-faint); font-size:.9rem; text-align:center; padding:1rem 0; }
+  .lb-clear{ margin-top:.9rem; }
+  .caveat-note{ font-size:.82rem; color:var(--ink-faint); background:var(--yellow-soft); border-radius:12px; padding:.7rem .9rem; }
+  @media (max-width:800px){ .game-bottom{ grid-template-columns:1fr; } }
+
+  /* ---------- MISION / VISION ---------- */
+  .pillars{ max-width:1000px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:1.4rem; }
+  .pillar{ background:var(--cream-2); border:1px solid var(--line); border-radius:24px; padding:2rem; box-shadow:var(--shadow); }
+  .pillar .icon{ width:48px; height:48px; border-radius:14px; display:grid; place-items:center; font-size:1.4rem; margin-bottom:1rem; }
+  .pillar.mision .icon{ background:var(--pink-soft); }
+  .pillar.vision .icon{ background:var(--purple-soft); }
+  .pillar h3{ font-size:1.2rem; margin-bottom:.6rem; }
+  .pillar p{ color:var(--ink-dim); font-size:.96rem; }
+  @media (max-width:800px){ .pillars{ grid-template-columns:1fr; } }
+
+  /* ---------- MATERIALES ---------- */
+  .materials-card{ max-width:1000px; margin:0 auto; background:var(--cream-2); border:1px solid var(--line); border-radius:24px; padding:1.8rem 2rem; box-shadow:var(--shadow); }
+  .materials-card h3{ font-size:1.1rem; margin-bottom:1rem; display:flex; align-items:center; gap:.5rem; }
+  .tag-row{ display:flex; flex-wrap:wrap; gap:.55rem; }
+  .tag-row span{ background:var(--cream); border:1px solid var(--line); border-radius:999px; padding:.45rem .95rem; font-weight:700; font-size:.85rem; }
+
+  /* ---------- PRECIOS ---------- */
+  .price-grid{ max-width:1000px; margin:0 auto; display:grid; grid-template-columns:repeat(4,1fr); gap:1.1rem; }
+  .price-card{ background:var(--cream-2); border:2px solid var(--line); border-radius:22px; padding:1.6rem 1.2rem; text-align:center; position:relative; transition: transform .18s, border-color .18s; }
+  .price-card:hover{ transform:translateY(-4px); border-color:var(--pink); }
+  .price-card.popular{ border-color:var(--yellow-600); }
+  .popular-flag{ position:absolute; top:-13px; left:50%; transform:translateX(-50%); background:var(--yellow); color:var(--ink); font-weight:800; font-size:.72rem; padding:.3rem .75rem; border-radius:999px; white-space:nowrap; }
+  .price-emoji{ font-size:1.9rem; margin-bottom:.5rem; }
+  .price-card h3{ font-size:1.02rem; margin-bottom:.3rem; }
+  .price-amount{ font-family:"Baloo 2",sans-serif; font-weight:800; color:var(--pink-600); font-size:1.4rem; }
+  @media (max-width:800px){ .price-grid{ grid-template-columns:1fr 1fr; } }
+  @media (max-width:480px){ .price-grid{ grid-template-columns:1fr; } }
+
+  /* ---------- CONTACTO ---------- */
+  .contact-wrap{ max-width:760px; margin:0 auto; }
+  .contact-card{ background:var(--cream-2); border:1px solid var(--line); border-radius:28px; padding:2.4rem; box-shadow:var(--shadow); text-align:center; }
+  .contact-card h2{ font-size:clamp(1.5rem,3vw,2rem); margin-bottom:.6rem; text-wrap:balance; }
+  .contact-card > p{ color:var(--ink-dim); margin-bottom:1.6rem; }
+  .lines-row{ display:flex; flex-direction:column; gap:.65rem; max-width:380px; margin:0 auto; }
+  .line-btn{ display:flex; align-items:center; justify-content:space-between; gap:.6rem; background:var(--cream); border:1px solid var(--line); border-radius:14px; padding:.75rem 1.1rem; font-weight:700; transition: border-color .16s, background .16s; }
+  .line-btn:hover{ border-color:var(--green); background:#fff; }
+  .line-btn .lb-label{ display:flex; align-items:center; gap:.6rem; font-size:.92rem; }
+  .line-btn .lb-tag{ font-size:.72rem; color:var(--ink-faint); font-weight:700; }
+
+  /* ---------- FOOTER ---------- */
+  .site-footer{ background:var(--navy); color:rgba(255,255,255,0.85); text-align:center; padding:3rem 1.5rem 2.2rem; }
+  .site-footer .brand{ justify-content:center; color:#fff; margin:0 0 .4rem; }
+  .site-footer p{ font-size:.85rem; color:rgba(255,255,255,0.55); }
+
+  /* ---------- FLOATING WHATSAPP ---------- */
+  .wa-float{ position:fixed; right:1.3rem; bottom:1.3rem; z-index:70; width:56px; height:56px; border-radius:50%; background:var(--green); display:grid; place-items:center; box-shadow:0 10px 24px rgba(0,0,0,0.25); transition: transform .18s; }
+  .wa-float:hover{ transform:scale(1.08); }
+  .wa-float svg{ width:28px; height:28px; }
+
+  @media (prefers-reduced-motion:reduce){ html{ scroll-behavior:auto; } }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="#inicio"><span class="brand-dot">🎀</span> Sticker.Ly</a>
+    <nav class="nav-links">
+      <a href="#pedido">Pedido</a>
+      <a href="#disena">Diseña</a>
+      <a href="#juego">Juego</a>
+      <a href="#precios">Precios</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+    <a class="nav-cta" href="#pedido">Empezar mi pedido</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div>
+  <div class="mobile-panel" id="mobilePanel">
+    <div class="mobile-panel-inner">
+      <a href="#pedido">Pedido</a>
+      <a href="#disena">Diseña</a>
+      <a href="#juego">Juego</a>
+      <a href="#precios">Precios</a>
+      <a href="#contacto">Contacto</a>
+      <a class="nav-cta" href="#pedido">Empezar mi pedido</a>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero" id="inicio">
+    <div class="hero-grid">
+      <div>
+        <span class="badge">🎨 Hecho para que seas tú</span>
+        <h1>
+          <span class="l1">Tu estilo.</span>
+          <span class="l2">Tu sticker.</span>
+          <span class="l3">Tu mundo.</span>
+        </h1>
+        <p class="lede">Stickers personalizados con tus imágenes, frases y diseños. <strong>Sube tu idea, arma tu pedido y te escribimos por WhatsApp para hacerlo realidad.</strong></p>
+        <div class="hero-actions">
+          <a class="btn btn-pink btn-lg" href="#pedido">✨ Empezar mi pedido</a>
+          <a class="btn btn-outline btn-lg" href="#juego">🎮 Jugar Sticker Dash</a>
+        </div>
+        <div class="hero-tags">
+          <span class="hero-tag">💝 Personalizados</span>
+          <span class="hero-tag">✨ Creativos</span>
+          <span class="hero-tag">🎁 Empaque especial</span>
+        </div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="sticker-card sc-a">🐱</div>
+        <div class="sticker-card sc-b">⭐</div>
+        <div class="sticker-card sc-main">
+          <div class="row">💖✨</div>
+          <div class="word"><span class="a">Sticker</span><span class="b">.Ly</span></div>
+          <div class="sub">pega tu estilo</div>
+        </div>
+        <div class="sticker-card sc-c">🎮</div>
+        <div class="sticker-card sc-d">🌸</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PEDIDO -->
+  <section class="section-white" id="pedido">
+    <div class="section-head">
+      <span class="badge">📦 Arma tu pedido</span>
+      <h2>Sube tu imagen, elige accesorios</h2>
+      <p>Agrega uno o varios diseños a tu pedido. Cuando termines, generamos un resumen que envías por WhatsApp.</p>
+    </div>
+    <div class="pedido-grid">
+
+      <div class="panel">
+        <h3>🖼️ Diseño <span id="itemCount" style="color:var(--ink-faint); font-weight:700; font-size:.85rem;"></span></h3>
+        <p class="hint">La imagen solo se procesa en tu navegador para armar el resumen — no se sube a ningún servidor.</p>
+
+        <div class="dropzone" id="dropzone">
+          <div class="dz-icon">🖼️</div>
+          <div class="dz-title">Arrastra tu imagen aquí</div>
+          <div class="dz-sub">o toca para seleccionarla desde tu dispositivo</div>
+          <input type="file" id="fileInput" accept="image/*" style="display:none;">
+        </div>
+        <div class="file-chip" id="fileChip">
+          <img id="fileChipImg" src="" alt="">
+          <span class="name" id="fileChipName"></span>
+          <button class="x" id="fileChipRemove" type="button" aria-label="Quitar imagen">✕</button>
+        </div>
+
+        <div class="accessory-note">🛠️ Estos accesorios son un ejemplo — el equipo de Sticker.Ly los reemplaza por el catálogo real de acabados.</div>
+        <div class="step-label">Elige acabado y extras (opcional)</div>
+        <div class="chip-row" id="accessoryRow">
+          <button class="chip" type="button" data-tag="Brillante">Brillante</button>
+          <button class="chip" type="button" data-tag="Mate">Mate</button>
+          <button class="chip" type="button" data-tag="Holográfico">Holográfico</button>
+          <button class="chip" type="button" data-tag="Tamaño grande">Tamaño grande</button>
+          <button class="chip" type="button" data-tag="Bordes redondeados">Bordes redondeados</button>
+          <button class="chip" type="button" data-tag="Empaque especial">Empaque especial</button>
+        </div>
+
+        <button class="btn btn-purple" id="addItemBtn" disabled>➕ Agregar este diseño al pedido</button>
+      </div>
+
+      <div class="panel">
+        <h3>🧾 Tu pedido</h3>
+        <p class="hint">Puedes agregar varios diseños distintos antes de enviarlo.</p>
+
+        <div class="order-list" id="orderList">
+          <div class="order-empty" id="orderEmpty">Aún no has agregado ningún diseño. Sube una imagen a la izquierda para comenzar ✨</div>
+        </div>
+
+        <div class="order-actions">
+          <button class="btn btn-pink" id="generateBtn" disabled>🎟️ Generar resumen de pedido</button>
+          <button class="btn btn-outline btn-sm" id="clearOrderBtn">Vaciar pedido</button>
+        </div>
+
+        <div class="postcard-wrap" id="postcardWrap">
+          <div class="postcard-preview">
+            <img id="postcardImg" alt="Resumen de tu pedido Sticker.Ly">
+          </div>
+          <div class="postcard-actions">
+            <a class="btn btn-green btn-sm" id="sendWhatsapp" target="_blank" rel="noopener">💬 Enviar por WhatsApp</a>
+          </div>
+          <ol class="send-steps">
+            <li><strong>Toca «Enviar por WhatsApp».</strong> Se abre el chat con el detalle de tu pedido y ahí lo envías.</li>
+            <li><strong>Después, adjunta tus imágenes de referencia</strong> en ese mismo chat con el botón 📎 (son las mismas que subiste aquí).</li>
+          </ol>
+          <div class="orig-box">
+            <div class="orig-title">📎 Imágenes de referencia</div>
+            <p class="orig-hint">¿No las encuentras en tu galería? Descárgalas aquí. Si la descarga falla, mantén presionada la imagen y elige «Descargar imagen».</p>
+            <div class="orig-list" id="origList"></div>
+            <button class="btn btn-purple btn-sm" id="shareFilesBtn" type="button" style="display:none;">📤 Compartir resumen + imágenes</button>
+            <div class="share-status" id="shareStatus"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- DISEÑA TU STICKER -->
+  <section id="disena">
+    <div class="section-head">
+      <span class="badge">🖍️ Zona creativa</span>
+      <h2>Bocetea tu propio sticker</h2>
+      <p>Combina forma, color, texto y un dibujo para probar una idea rápida antes de subir tu imagen real.</p>
+    </div>
+    <div class="designer-grid">
+      <div>
+        <div class="step-block">
+          <div class="step-label">1. Elige la forma</div>
+          <div class="shape-row" id="shapeRow">
+            <button class="shape-opt active" data-shape="redondo" type="button">Redondo</button>
+            <button class="shape-opt" data-shape="estrella" type="button">⭐ Estrella</button>
+            <button class="shape-opt" data-shape="circulo" type="button">⚪ Círculo</button>
+          </div>
+        </div>
+        <div class="step-block">
+          <div class="step-label">2. Elige un color</div>
+          <div class="color-row" id="colorRow">
+            <button class="color-dot active" style="background:var(--pink);" data-color="var(--pink)" type="button" aria-label="Rosado"></button>
+            <button class="color-dot" style="background:var(--purple);" data-color="var(--purple)" type="button" aria-label="Morado"></button>
+            <button class="color-dot" style="background:var(--yellow);" data-color="var(--yellow)" type="button" aria-label="Amarillo"></button>
+            <button class="color-dot" style="background:var(--green);" data-color="var(--green)" type="button" aria-label="Verde"></button>
+            <button class="color-dot" style="background:#59B7E8;" data-color="#59B7E8" type="button" aria-label="Azul"></button>
+          </div>
+        </div>
+        <div class="step-block">
+          <div class="step-label">3. Escribe un nombre o frase</div>
+          <input class="designer-input" id="designerText" placeholder="Ej: Sofi ✨" maxlength="18">
+        </div>
+        <div class="step-block">
+          <div class="step-label">4. Elige tu dibujo</div>
+          <select class="designer-select" id="designerEmoji">
+            <option value="🐱">🐱 Gato</option>
+            <option value="🐶">🐶 Perro</option>
+            <option value="💖">💖 Corazón</option>
+            <option value="⭐">⭐ Estrella</option>
+            <option value="🌸">🌸 Flor</option>
+          </select>
+        </div>
+        <p style="font-size:.86rem; color:var(--ink-faint); margin-bottom:1.2rem;">💡 Esta es solo una idea rápida. Para convertirla en un pedido real, súbela como imagen en la sección de arriba.</p>
+        <a class="btn btn-navy" href="#pedido">📦 Convertir esta idea en pedido</a>
+      </div>
+      <div class="preview-stage">
+        <div class="sticker-preview" id="stickerPreview" style="background:var(--pink); border-radius:44%;">
+          <span class="emoji" id="previewEmoji">🐱</span>
+          <span class="txt" id="previewText" style="color:#fff;">Tu sticker</span>
+        </div>
+        <p class="preview-caption">Vista previa de tu idea 💫</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- JUEGO -->
+  <section class="section-white" id="juego">
+    <div class="section-head">
+      <span class="badge">🎮 Sticker Dash</span>
+      <h2>Salta y sobrevive entre los stickers</h2>
+      <p>Un mini juego para distraerte mientras esperas tu pedido. Toca, haz clic o presiona espacio para saltar.</p>
+    </div>
+
+    <div class="game-panel">
+      <div class="game-top">
+        <div class="game-title">✨ Sticker Dash</div>
+        <div class="game-stats">
+          <span class="stat-chip">⭐ Puntos: <span id="scoreLive">0</span></span>
+          <span class="stat-chip">🏁 Mejor: <span id="bestLive">0</span></span>
+        </div>
+      </div>
+      <div class="game-stage">
+        <canvas id="gameCanvas" width="800" height="260"></canvas>
+        <div class="game-overlay" id="startOverlay">
+          <h4>¿Lista para el reto? 🚀</h4>
+          <p>Salta los obstáculos que vuelan por la pista. Cada segundo que sobrevives suma puntos.</p>
+          <button class="btn btn-pink" id="startBtn">▶️ Jugar</button>
+        </div>
+        <div class="game-overlay hidden" id="overOverlay">
+          <h4>¡Se acabó! 💥</h4>
+          <p>Puntaje: <strong id="finalScore">0</strong> — escribe tus iniciales para guardarlo en tu marcador local.</p>
+          <div class="initials-row">
+            <input type="text" id="initialsInput" maxlength="3" placeholder="ABC">
+            <button class="btn btn-yellow btn-sm" id="saveScoreBtn">Guardar</button>
+          </div>
+          <button class="btn btn-outline btn-sm" id="retryBtn" style="margin-top:.5rem;">🔁 Jugar de nuevo</button>
+        </div>
+      </div>
+      <p class="game-hint">Espacio / tocar la pista = saltar · Este juego vive dentro de la tarjeta oscura, el marcador está debajo.</p>
+    </div>
+
+    <div class="game-bottom">
+      <div class="lb-panel">
+        <h4>🏆 Tu tabla de puntuaciones</h4>
+        <div id="leaderboardBox"><div class="lb-empty">Todavía no hay puntajes guardados en este navegador.</div></div>
+        <button class="btn btn-outline btn-sm lb-clear" id="clearScoresBtn">Borrar puntuaciones</button>
+      </div>
+      <div class="lb-panel">
+        <h4>💡 Cómo funciona el marcador</h4>
+        <p class="caveat-note">Este sitio es una página estática (sin servidor), así que el marcador se guarda solo en <strong>este navegador</strong>. Cada persona ve su propio historial, no uno compartido entre todos los visitantes.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MISION / VISION -->
+  <section id="mision">
+    <div class="section-head">
+      <span class="badge">💝 Conoce Sticker.Ly</span>
+      <h2>Pequeño emprendimiento, grandes ideas</h2>
+      <p>Queremos que cada sticker tenga algo especial: que represente una persona, un gusto o simplemente una idea que te haga sonreír.</p>
+    </div>
+    <div class="pillars">
+      <article class="pillar mision">
+        <div class="icon">🎯</div>
+        <h3>Misión</h3>
+        <p>Crear stickers personalizados, creativos y de buena calidad, permitiendo que cada cliente exprese su personalidad y gustos de una manera divertida, económica y original, con una atención cercana y agradable.</p>
+      </article>
+      <article class="pillar vision">
+        <div class="icon">🔭</div>
+        <h3>Visión</h3>
+        <p>Al finalizar la feria empresarial, buscamos ser reconocidos como uno de los emprendimientos más creativos y llamativos, destacándonos por nuestros diseños personalizados, la innovación y una buena atención al cliente.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- MATERIALES -->
+  <section class="section-white" style="padding-top:0;">
+    <div class="materials-card">
+      <h3>🧰 ¿Qué hay detrás de cada sticker?</h3>
+      <div class="tag-row">
+        <span>📋 Papel adhesivo</span>
+        <span>✨ Papel adhesivo transparente</span>
+        <span>🖨️ Tinta / impresión</span>
+        <span>✂️ Tijeras</span>
+        <span>📏 Regla</span>
+        <span>🖊️ Marcadores</span>
+        <span>🎁 Bolsitas transparentes</span>
+        <span>🎨 Cartulina</span>
+        <span>📦 Empaques y etiquetas</span>
+        <span>🧵 Cinta adhesiva</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRECIOS -->
+  <section id="precios">
+    <div class="section-head">
+      <span class="badge">💸 Precios</span>
+      <h2>Elige tu combo</h2>
+      <p>El costo final puede variar según tamaño y acabado — lo confirmamos siempre por WhatsApp antes de hacer el sticker.</p>
+    </div>
+    <div class="price-grid">
+      <div class="price-card">
+        <div class="price-emoji">⭐</div>
+        <h3>Individual</h3>
+        <div class="price-amount">$1.500</div>
+      </div>
+      <div class="price-card popular">
+        <span class="popular-flag">🔥 Popular</span>
+        <div class="price-emoji">🌈</div>
+        <h3>Pack x3</h3>
+        <div class="price-amount">$4.000</div>
+      </div>
+      <div class="price-card">
+        <div class="price-emoji">💖</div>
+        <h3>Pack x5</h3>
+        <div class="price-amount">$6.000</div>
+      </div>
+      <div class="price-card">
+        <div class="price-emoji">👑</div>
+        <h3>Personalizado</h3>
+        <div class="price-amount">$2.000</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACTO -->
+  <section class="section-white" id="contacto">
+    <div class="contact-wrap">
+      <div class="contact-card">
+        <span class="badge">💬 Hablemos</span>
+        <h2 style="margin-top:1rem;">Cuéntanos tu idea por WhatsApp</h2>
+        <p>Escríbenos a cualquiera de estas líneas, o mejor aún, arma tu pedido arriba y envíanos el resumen directamente.</p>
+        <div class="lines-row">
+          <a class="line-btn" id="line1" target="_blank" rel="noopener"><span class="lb-label">💬 Línea 1</span><span class="lb-tag">+57 318 565 7983</span></a>
+          <a class="line-btn" id="line2" target="_blank" rel="noopener"><span class="lb-label">💬 Línea 2</span><span class="lb-tag">+57 322 637 2621</span></a>
+          <a class="line-btn" id="line3" target="_blank" rel="noopener"><span class="lb-label">💬 Línea 3</span><span class="lb-tag">+57 318 842 9234</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="brand"><span class="brand-dot">🎀</span> Sticker.Ly</div>
+  <p>Pega tu estilo, muestra quién eres.</p>
+  <p style="margin-top:.8rem;">© 2026 Sticker.Ly</p>
+</footer>
+
+<a class="wa-float" id="floatWa" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp">
+  <svg viewBox="0 0 24 24" fill="#fff"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2zm5.9 14.2c-.3.7-1.4 1.4-2 1.5-.5.1-1.1.2-3.4-.7-2.9-1.2-4.8-4.1-4.9-4.3-.1-.2-1.2-1.6-1.2-3s.7-2.1 1-2.4c.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5.2.6.7 2 .8 2.1.1.2.1.4 0 .6-.4.8-.9 1.1-1.2 1.5-.2.2-.3.4-.1.7.5 1 1.3 2 2.1 2.7.9.8 1.8 1.2 2.3 1.4.3.1.5.1.7-.1.3-.3.7-1 1-1.4.2-.3.4-.3.7-.2l1.9.9c.2.1.4.2.4.4.1.3.1.9-.1 1.7z"/></svg>
+</a>
+
+<!-- Hidden postcard template used by html2canvas -->
+<div style="position:fixed; left:-9999px; top:0;">
+  <div id="postcardTemplate">
+    <div class="pc-head">
+      <div class="pc-brand">🎀 Sticker.Ly</div>
+      <div class="pc-code" id="pcCode">SL-00000</div>
+    </div>
+    <div id="pcItems"></div>
+    <div class="pc-foot" id="pcFoot">1 diseño · Pega tu estilo, muestra quién eres</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  /* ---------- NAV ---------- */
+  var navToggle = document.getElementById('navToggle');
+  var mobilePanel = document.getElementById('mobilePanel');
+  navToggle.addEventListener('click', function(){
+    var isOpen = mobilePanel.classList.toggle('open');
+    navToggle.classList.toggle('open', isOpen);
+    navToggle.setAttribute('aria-expanded', isOpen ? 'true':'false');
+  });
+  mobilePanel.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){
+      mobilePanel.classList.remove('open');
+      navToggle.classList.remove('open');
+      navToggle.setAttribute('aria-expanded','false');
+    });
+  });
+
+  /* ---------- WHATSAPP LINKS ---------- */
+  var PHONES = { line1:"573185657983", line2:"573226372621", line3:"573188429234" };
+  function waLink(phone, msg){ return "https://wa.me/" + phone + "?text=" + encodeURIComponent(msg); }
+  document.getElementById('line1').href = waLink(PHONES.line1, "¡Hola Sticker.Ly! Quiero saber más sobre sus stickers personalizados.");
+  document.getElementById('line2').href = waLink(PHONES.line2, "¡Hola Sticker.Ly! Quiero saber más sobre sus stickers personalizados.");
+  document.getElementById('line3').href = waLink(PHONES.line3, "¡Hola Sticker.Ly! Quiero saber más sobre sus stickers personalizados.");
+  document.getElementById('floatWa').href = waLink(PHONES.line1, "¡Hola Sticker.Ly! Quiero saber más sobre sus stickers personalizados.");
+
+  /* ---------- DISEÑA TU STICKER (idea sketch tool) ---------- */
+  var shapeRow = document.getElementById('shapeRow');
+  var colorRow = document.getElementById('colorRow');
+  var designerText = document.getElementById('designerText');
+  var designerEmoji = document.getElementById('designerEmoji');
+  var stickerPreview = document.getElementById('stickerPreview');
+  var previewEmoji = document.getElementById('previewEmoji');
+  var previewText = document.getElementById('previewText');
+  var currentShape = 'redondo';
+  var currentColor = 'var(--pink)';
+
+  function applyShape(){
+    if(currentShape === 'circulo'){ stickerPreview.style.borderRadius = '50%'; }
+    else if(currentShape === 'estrella'){ stickerPreview.style.borderRadius = '18%'; stickerPreview.style.clipPath = 'polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)'; }
+    if(currentShape !== 'estrella'){ stickerPreview.style.clipPath = 'none'; }
+    if(currentShape === 'redondo'){ stickerPreview.style.borderRadius = '44%'; }
+  }
+  shapeRow.querySelectorAll('.shape-opt').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      shapeRow.querySelectorAll('.shape-opt').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      currentShape = btn.getAttribute('data-shape');
+      applyShape();
+    });
+  });
+  colorRow.querySelectorAll('.color-dot').forEach(function(dot){
+    dot.addEventListener('click', function(){
+      colorRow.querySelectorAll('.color-dot').forEach(function(d){ d.classList.remove('active'); });
+      dot.classList.add('active');
+      currentColor = dot.getAttribute('data-color');
+      stickerPreview.style.background = currentColor;
+    });
+  });
+  designerText.addEventListener('input', function(){
+    previewText.textContent = designerText.value.trim() || 'Tu sticker';
+  });
+  designerEmoji.addEventListener('change', function(){
+    previewEmoji.textContent = designerEmoji.value;
+  });
+  applyShape();
+
+  /* ---------- PEDIDO (order builder) ---------- */
+  var dropzone = document.getElementById('dropzone');
+  var fileInput = document.getElementById('fileInput');
+  var fileChip = document.getElementById('fileChip');
+  var fileChipImg = document.getElementById('fileChipImg');
+  var fileChipName = document.getElementById('fileChipName');
+  var fileChipRemove = document.getElementById('fileChipRemove');
+  var accessoryRow = document.getElementById('accessoryRow');
+  var addItemBtn = document.getElementById('addItemBtn');
+  var orderList = document.getElementById('orderList');
+  var orderEmpty = document.getElementById('orderEmpty');
+  var generateBtn = document.getElementById('generateBtn');
+  var clearOrderBtn = document.getElementById('clearOrderBtn');
+  var itemCount = document.getElementById('itemCount');
+
+  var draftImage = null; // {dataUrl, name}
+  var draftTags = [];
+  var orderItems = [];
+  var itemSeq = 1;
+
+  function resetDraft(){
+    draftImage = null;
+    draftTags = [];
+    fileInput.value = '';
+    fileChip.classList.remove('show');
+    accessoryRow.querySelectorAll('.chip').forEach(function(c){ c.classList.remove('active'); });
+    addItemBtn.disabled = true;
+  }
+
+  function handleFile(file){
+    if(!file || !file.type.startsWith('image/')) return;
+    var reader = new FileReader();
+    reader.onload = function(e){
+      draftImage = { dataUrl: e.target.result, name: file.name, file: file, objUrl: URL.createObjectURL(file) };
+      fileChipImg.src = draftImage.dataUrl;
+      fileChipName.textContent = file.name;
+      fileChip.classList.add('show');
+      addItemBtn.disabled = false;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  dropzone.addEventListener('click', function(){ fileInput.click(); });
+  dropzone.addEventListener('dragover', function(e){ e.preventDefault(); dropzone.classList.add('drag'); });
+  dropzone.addEventListener('dragleave', function(){ dropzone.classList.remove('drag'); });
+  dropzone.addEventListener('drop', function(e){
+    e.preventDefault(); dropzone.classList.remove('drag');
+    if(e.dataTransfer.files && e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+  });
+  fileInput.addEventListener('change', function(){
+    if(fileInput.files && fileInput.files[0]) handleFile(fileInput.files[0]);
+  });
+  fileChipRemove.addEventListener('click', function(e){ e.stopPropagation(); resetDraft(); });
+
+  accessoryRow.querySelectorAll('.chip').forEach(function(chip){
+    chip.addEventListener('click', function(){
+      chip.classList.toggle('active');
+      var tag = chip.getAttribute('data-tag');
+      if(chip.classList.contains('active')){ draftTags.push(tag); }
+      else{ draftTags = draftTags.filter(function(t){ return t !== tag; }); }
+    });
+  });
+
+  function renderOrderList(){
+    orderList.innerHTML = '';
+    if(orderItems.length === 0){
+      orderList.appendChild(orderEmpty);
+      generateBtn.disabled = true;
+      itemCount.textContent = '';
+      return;
+    }
+    itemCount.textContent = '· ' + orderItems.length + (orderItems.length===1 ? ' diseño' : ' diseños');
+    generateBtn.disabled = false;
+    orderItems.forEach(function(item){
+      var row = document.createElement('div');
+      row.className = 'order-item';
+      var tagsHtml = item.tags.length ? item.tags.map(function(t){ return '<span>'+t+'</span>'; }).join('') : '<span>Sin acabado especial</span>';
+      row.innerHTML = '<a href="'+item.objUrl+'" target="_blank" rel="noopener" title="Abrir imagen original"><img src="'+item.dataUrl+'" alt="Diseño #'+item.seq+'"></a>' +
+        '<div class="meta"><div class="label">Diseño #'+item.seq+'</div><div class="tags">'+tagsHtml+'</div></div>' +
+        '<button class="remove" type="button" aria-label="Quitar diseño">✕</button>';
+      row.querySelector('.remove').addEventListener('click', function(){
+        orderItems = orderItems.filter(function(i){ return i.seq !== item.seq; });
+        renderOrderList();
+        hidePostcard();
+      });
+      orderList.appendChild(row);
+    });
+  }
+
+  addItemBtn.addEventListener('click', function(){
+    if(!draftImage) return;
+    orderItems.push({ seq:itemSeq++, dataUrl:draftImage.dataUrl, name:draftImage.name, file:draftImage.file, objUrl:draftImage.objUrl, tags:draftTags.slice() });
+    resetDraft();
+    renderOrderList();
+    hidePostcard();
+  });
+
+  clearOrderBtn.addEventListener('click', function(){
+    orderItems = [];
+    renderOrderList();
+    hidePostcard();
+  });
+
+  renderOrderList();
+
+  /* ---------- POSTCARD GENERATION ---------- */
+  var postcardWrap = document.getElementById('postcardWrap');
+  var postcardImg = document.getElementById('postcardImg');
+  var sendWhatsapp = document.getElementById('sendWhatsapp');
+  var pcCode = document.getElementById('pcCode');
+  var pcItems = document.getElementById('pcItems');
+  var pcFoot = document.getElementById('pcFoot');
+  var currentOrderCode = '';
+
+  function hidePostcard(){ postcardWrap.classList.remove('show'); }
+
+  function makeOrderCode(){
+    var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    var code = '';
+    for(var i=0;i<5;i++){ code += chars[Math.floor(Math.random()*chars.length)]; }
+    return 'SL-' + code;
+  }
+
+  var origList = document.getElementById('origList');
+  var shareFilesBtn = document.getElementById('shareFilesBtn');
+  var shareStatus = document.getElementById('shareStatus');
+  var shareFiles = [];
+  var lastSummaryUrl = null;
+
+  function esc(t){ return String(t).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function origName(item){ return currentOrderCode + '_diseno-' + item.seq + '_' + item.name.replace(/[^\w.\-]+/g,'-'); }
+  function loadImg(src){
+    return new Promise(function(res){
+      var im = new Image();
+      im.onload = function(){ res(im); };
+      im.onerror = function(){ res(null); };
+      im.src = src;
+    });
+  }
+
+  generateBtn.addEventListener('click', function(){
+    if(orderItems.length === 0) return;
+    var btnLabel = generateBtn.textContent;
+    generateBtn.disabled = true;
+    generateBtn.textContent = 'Generando…';
+    currentOrderCode = makeOrderCode();
+    pcCode.textContent = currentOrderCode;
+
+    // Espera a que cada imagen cargue y le da tamaño explícito (sin object-fit) para que se vea completa
+    Promise.all(orderItems.map(function(it){ return loadImg(it.dataUrl); })).then(function(imgs){
+      pcItems.innerHTML = orderItems.map(function(item, i){
+        var im = imgs[i];
+        var nw = im ? im.naturalWidth : 300, nh = im ? im.naturalHeight : 300;
+        var k = Math.min(320/nw, 260/nh, 3);
+        var tagsTxt = item.tags.length ? item.tags.join(' · ') : 'Sin acabado especial';
+        return '<div class="pc-item"><div class="pc-title">Diseño #'+item.seq+'</div><div class="t">'+tagsTxt+'</div>' +
+          '<div class="pc-img"><img src="'+item.dataUrl+'" alt="" width="'+Math.round(nw*k)+'" height="'+Math.round(nh*k)+'"></div>' +
+          '<div class="pc-file">Imagen de referencia: '+esc(item.name)+'</div></div>';
+      }).join('');
+      pcFoot.textContent = orderItems.length + (orderItems.length===1?' diseño':' diseños') + ' · Pega tu estilo, muestra quién eres';
+      return html2canvas(document.getElementById('postcardTemplate'), { scale: orderItems.length > 3 ? 2 : 3, backgroundColor:null });
+    }).then(function(canvas){
+      canvas.toBlob(function(blob){
+        if(lastSummaryUrl) URL.revokeObjectURL(lastSummaryUrl);
+        lastSummaryUrl = URL.createObjectURL(blob);
+        postcardImg.src = lastSummaryUrl;
+
+        var lines = orderItems.map(function(item){
+          var t = item.tags.length ? item.tags.join(', ') : 'Sin acabado especial';
+          return '• Diseño #'+item.seq+' — '+t+' (imagen: '+item.name+')';
+        });
+        var msg = '¡Hola Sticker.Ly! Aquí va mi pedido ' + currentOrderCode + ':\n' + lines.join('\n') + '\n\nAhora te adjunto las imágenes de referencia 🎀';
+        sendWhatsapp.href = waLink(PHONES.line1, msg);
+
+        origList.innerHTML = '';
+        orderItems.forEach(function(item){
+          var row = document.createElement('div');
+          row.className = 'orig-row';
+          var im = document.createElement('img');
+          im.src = item.dataUrl;
+          im.alt = 'Diseño #' + item.seq;
+          var a = document.createElement('a');
+          // El archivo va incrustado (data:) porque las descargas blob: fallan en algunos celulares
+          a.href = item.dataUrl.length < 2000000 ? item.dataUrl : item.objUrl;
+          a.download = origName(item);
+          a.textContent = '⬇️ Diseño #' + item.seq + ' — ' + item.name;
+          row.appendChild(im);
+          row.appendChild(a);
+          origList.appendChild(row);
+        });
+
+        // En celulares que lo permiten, comparte resumen + originales directo a WhatsApp
+        shareFiles = [new File([blob], 'pedido-' + currentOrderCode + '.png', { type:'image/png' })].concat(
+          orderItems.map(function(item){ return new File([item.file], origName(item), { type:item.file.type }); })
+        );
+        var canShare = false;
+        try{ canShare = !!(navigator.share && navigator.canShare && navigator.canShare({ files: shareFiles })); }catch(e){}
+        shareFilesBtn.style.display = canShare ? 'inline-flex' : 'none';
+        shareStatus.textContent = '';
+
+        generateBtn.disabled = false;
+        generateBtn.textContent = btnLabel;
+        postcardWrap.classList.add('show');
+        postcardWrap.scrollIntoView({ behavior:'smooth', block:'nearest' });
+      }, 'image/png');
+    }).catch(function(){
+      generateBtn.disabled = false;
+      generateBtn.textContent = btnLabel;
+      alert('No pudimos generar el resumen. Inténtalo de nuevo.');
+    });
+  });
+
+  shareFilesBtn.addEventListener('click', function(){
+    shareStatus.textContent = '';
+    var t0 = Date.now();
+    function fail(err){
+      var name = (err && err.name) || 'error';
+      // AbortError tras un rato = cerraste el menú tú; si es inmediato, el navegador no pudo abrirlo
+      if(name === 'AbortError' && Date.now() - t0 > 1500) return;
+      shareStatus.textContent = 'Tu navegador no pudo abrir el menú de compartir (' + name + '). Usa «Enviar por WhatsApp» y adjunta las imágenes desde el chat.';
+    }
+    try{
+      navigator.share({ files: shareFiles }).catch(fail);
+    }catch(err){ fail(err); }
+  });
+
+  /* ---------- STICKER DASH GAME ---------- */
+  var canvas = document.getElementById('gameCanvas');
+  var ctx = canvas.getContext('2d');
+  var startOverlay = document.getElementById('startOverlay');
+  var overOverlay = document.getElementById('overOverlay');
+  var startBtn = document.getElementById('startBtn');
+  var retryBtn = document.getElementById('retryBtn');
+  var saveScoreBtn = document.getElementById('saveScoreBtn');
+  var initialsInput = document.getElementById('initialsInput');
+  var finalScoreEl = document.getElementById('finalScore');
+  var scoreLive = document.getElementById('scoreLive');
+  var bestLive = document.getElementById('bestLive');
+  var leaderboardBox = document.getElementById('leaderboardBox');
+  var clearScoresBtn = document.getElementById('clearScoresBtn');
+
+  var W = 800, H = 260, groundY = 210;
+  var player, obstacles, speed, spawnTimer, running, score, animId, lastTs;
+  var OBSTACLE_EMOJI = ['✂️','📎','🖇️'];
+  var FLY_EMOJI = ['🎈','🐝'];
+
+  function resizeCanvas(){
+    var displayWidth = canvas.parentElement.clientWidth;
+    W = Math.max(320, displayWidth);
+    H = Math.round(W * 0.325);
+    groundY = H - 50;
+    canvas.width = W; canvas.height = H;
+  }
+  window.addEventListener('resize', resizeCanvas);
+
+  function resetGame(){
+    resizeCanvas();
+    player = { x:60, y:groundY-40, size:40, vy:0, jumping:false };
+    obstacles = [];
+    speed = 6.2;
+    spawnTimer = 0;
+    score = 0;
+    running = false;
+  }
+
+  function jump(){
+    if(!running) return;
+    if(!player.jumping){ player.vy = -9.2; player.jumping = true; }
+  }
+
+  function spawnObstacle(){
+    // Algunos obstáculos vuelan a distintas alturas: hay que pasar por debajo (sin saltar)
+    if(score > 4 && Math.random() < 0.25){
+      var fh = 30;
+      var bottom = groundY - 44 - Math.random()*20;
+      obstacles.push({ x:W+20, y:bottom-fh, w:32, h:fh, fly:true, emoji: FLY_EMOJI[Math.floor(Math.random()*FLY_EMOJI.length)] });
+      return;
+    }
+    // En el suelo: alturas variadas, de bajitos (24 px) a altos (60 px)
+    var h = 24 + Math.random()*36;
+    var w = Math.round(24 + h*0.25);
+    obstacles.push({ x:W+20, y:groundY-h, w:w, h:h, emoji: OBSTACLE_EMOJI[Math.floor(Math.random()*OBSTACLE_EMOJI.length)] });
+  }
+
+  function update(dt){
+    player.vy += 0.55;
+    player.y += player.vy;
+    if(player.y > groundY - player.size){ player.y = groundY - player.size; player.vy = 0; player.jumping = false; }
+
+    spawnTimer -= dt;
+    if(spawnTimer <= 0){
+      spawnObstacle();
+      spawnTimer = Math.max(550, 1400 - speed*90) + Math.random()*400;
+    }
+
+    for(var i=obstacles.length-1;i>=0;i--){
+      obstacles[i].x -= speed;
+      if(obstacles[i].x + obstacles[i].w < 0) obstacles.splice(i,1);
+    }
+
+    var pRect = { x:player.x+6, y:player.y+6, w:player.size-12, h:player.size-12 };
+    for(var j=0;j<obstacles.length;j++){
+      var o = obstacles[j];
+      if(pRect.x < o.x+o.w && pRect.x+pRect.w > o.x && pRect.y < o.y+o.h && pRect.y+pRect.h > o.y){
+        gameOver();
+        return;
+      }
+    }
+
+    score += dt * 0.012;
+    speed = Math.min(12, 6.2 + score*0.05);
+    scoreLive.textContent = Math.floor(score);
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    var grad = ctx.createLinearGradient(0,0,0,H);
+    grad.addColorStop(0,'#2c2852'); grad.addColorStop(1,'#221f3b');
+    ctx.fillStyle = grad; ctx.fillRect(0,0,W,H);
+
+    ctx.strokeStyle = 'rgba(255,255,255,0.18)';
+    ctx.setLineDash([8,8]);
+    ctx.beginPath(); ctx.moveTo(0,groundY+2); ctx.lineTo(W,groundY+2); ctx.stroke();
+    ctx.setLineDash([]);
+
+    obstacles.forEach(function(o){
+      ctx.fillStyle = o.fly ? '#8b7cdb' : '#ff5c97';
+      roundRect(o.x,o.y,o.w,o.h,7);
+      ctx.font = (o.w-4)+'px sans-serif';
+      ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText(o.emoji, o.x+o.w/2, o.y+o.h/2+1);
+    });
+
+    ctx.fillStyle = '#ffc93c';
+    roundRect(player.x, player.y, player.size, player.size, 12);
+    ctx.fillStyle = '#221f3b';
+    ctx.beginPath(); ctx.arc(player.x+14, player.y+16, 2.6, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(player.x+26, player.y+16, 2.6, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(player.x+20, player.y+24, 6, 0, Math.PI, false); ctx.stroke();
+  }
+
+  function roundRect(x,y,w,h,r){
+    ctx.beginPath();
+    ctx.moveTo(x+r,y);
+    ctx.arcTo(x+w,y,x+w,y+h,r);
+    ctx.arcTo(x+w,y+h,x,y+h,r);
+    ctx.arcTo(x,y+h,x,y,r);
+    ctx.arcTo(x,y,x+w,y,r);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  function loop(ts){
+    if(!running) return;
+    var dt = lastTs ? (ts-lastTs) : 16;
+    dt = Math.min(dt, 40);
+    lastTs = ts;
+    update(dt);
+    draw();
+    if(running) animId = requestAnimationFrame(loop);
+  }
+
+  function startGame(){
+    resetGame();
+    running = true;
+    lastTs = null;
+    startOverlay.classList.add('hidden');
+    overOverlay.classList.add('hidden');
+    animId = requestAnimationFrame(loop);
+  }
+
+  function gameOver(){
+    running = false;
+    cancelAnimationFrame(animId);
+    var finalScoreVal = Math.floor(score);
+    finalScoreEl.textContent = finalScoreVal;
+    initialsInput.value = '';
+    overOverlay.classList.remove('hidden');
+    updateBest();
+  }
+
+  startBtn.addEventListener('click', startGame);
+  retryBtn.addEventListener('click', startGame);
+  canvas.addEventListener('pointerdown', jump);
+  window.addEventListener('keydown', function(e){
+    if(e.code === 'Space'){ e.preventDefault(); jump(); }
+  });
+
+  /* Leaderboard (local only) */
+  var LB_KEY = 'stickerly_leaderboard_v1';
+  function getScores(){
+    try{ return JSON.parse(localStorage.getItem(LB_KEY)) || []; }catch(e){ return []; }
+  }
+  function setScores(list){
+    try{ localStorage.setItem(LB_KEY, JSON.stringify(list)); }catch(e){}
+  }
+  function updateBest(){
+    var scores = getScores();
+    var best = scores.length ? scores[0].score : 0;
+    bestLive.textContent = best;
+  }
+  function renderLeaderboard(highlightIdx){
+    var scores = getScores();
+    if(scores.length === 0){
+      leaderboardBox.innerHTML = '<div class="lb-empty">Todavía no hay puntajes guardados en este navegador.</div>';
+      return;
+    }
+    leaderboardBox.innerHTML = scores.slice(0,10).map(function(s,i){
+      var mine = (i===highlightIdx) ? ' mine' : '';
+      return '<div class="lb-row'+mine+'"><span><span class="rank">'+(i+1)+'.</span>'+s.name+'</span><span>⭐ '+s.score+'</span></div>';
+    }).join('');
+  }
+
+  saveScoreBtn.addEventListener('click', function(){
+    var name = (initialsInput.value || 'YOU').toUpperCase().slice(0,3).padEnd(3,'-');
+    var finalScoreVal = parseInt(finalScoreEl.textContent, 10) || 0;
+    var scores = getScores();
+    scores.push({ name:name, score:finalScoreVal });
+    scores.sort(function(a,b){ return b.score - a.score; });
+    scores = scores.slice(0,10);
+    setScores(scores);
+    var idx = scores.findIndex(function(s){ return s.name===name && s.score===finalScoreVal; });
+    renderLeaderboard(idx);
+    updateBest();
+    saveScoreBtn.disabled = true;
+    saveScoreBtn.textContent = '¡Guardado!';
+  });
+
+  retryBtn.addEventListener('click', function(){
+    saveScoreBtn.disabled = false;
+    saveScoreBtn.textContent = 'Guardar';
+  });
+
+  clearScoresBtn.addEventListener('click', function(){
+    setScores([]);
+    renderLeaderboard(-1);
+    updateBest();
+  });
+
+  resetGame();
+  renderLeaderboard(-1);
+  updateBest();
+  draw();
+
+})();
+</script>
+
+</body>
+</html>
